@@ -26,4 +26,3 @@ except:
     print("Wrong in code")
 finally:
     print("Try Except is finished")            #Finally block gets printed regardless the code is wrong or right
-
