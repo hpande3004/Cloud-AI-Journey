@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Rahul",
+        "emp_id": 102,
+        "city": "Mumbai"
+    },
+    {
+        "name": "Priya",
+        "emp_id": 104,
+        "city": "Pune"
+    },
+    {
+        "name": "Amit",
+        "emp_id": 106,
+        "city": "Delhi"
+    }
+]

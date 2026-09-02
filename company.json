@@ -1,0 +1,17 @@
+{
+    "name": "TechCorp",
+    "location": {
+        "city": "Pune",
+        "country": "India"
+    },
+    "employees": [
+        {
+            "name": "Rahul",
+            "role": "Developer"
+        },
+        {
+            "name": "Priya",
+            "role": "Cloud Engineer"
+        }
+    ]
+}
