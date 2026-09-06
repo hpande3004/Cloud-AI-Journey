@@ -22,4 +22,4 @@ student.marks = 95
 print(student.marks)
 
 student.marks = 150
-print(student.marks)
+print(student.marks) 
