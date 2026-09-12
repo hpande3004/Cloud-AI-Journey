@@ -1,0 +1,3 @@
+Environment = Development
+Cloud = AWS
+Project = Automation
