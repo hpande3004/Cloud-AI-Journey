@@ -1,0 +1,212 @@
+import requests
+import logging
+import os
+
+
+BASE_URL = "https://jsonplaceholder.typicode.com"
+
+
+logging.basicConfig(
+    filename="api_client.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+
+def get_users(limit=5):
+    """Fetch users using a query parameter."""
+
+    url = f"{BASE_URL}/users"
+
+    params = {
+        "_limit": limit
+    }
+
+    try:
+        response = requests.get(
+            url,
+            params=params,
+            timeout=10
+        )
+
+        response.raise_for_status()
+
+        users = response.json()
+
+        logging.info(
+            f"GET request successful. Retrieved {len(users)} users."
+        )
+
+        return users
+
+    except requests.exceptions.RequestException as error:
+
+        logging.error(f"GET request failed: {error}")
+
+        print(f"GET request failed: {error}")
+
+        return []
+
+
+def display_users(users):
+
+    print("\nUsers")
+    print("-----------------------------")
+
+    for user in users:
+
+        print(
+            f"ID: {user['id']} | "
+            f"Name: {user['name']} | "
+            f"Email: {user['email']}"
+        )
+
+
+def create_post():
+
+    url = f"{BASE_URL}/posts"
+
+    data = {
+        "title": "Learning API Automation",
+        "body": "Building REST API clients using Python.",
+        "userId": 1
+    }
+
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    try:
+
+        response = requests.post(
+            url,
+            json=data,
+            headers=headers,
+            timeout=10
+        )
+
+        response.raise_for_status()
+
+        result = response.json()
+
+        logging.info(
+            f"POST request successful. Created post ID: {result['id']}"
+        )
+
+        print("\nPOST Request")
+        print("-----------------------------")
+        print(f"Created Post ID: {result['id']}")
+        print(f"Title: {result['title']}")
+
+        return result
+
+    except requests.exceptions.RequestException as error:
+
+        logging.error(f"POST request failed: {error}")
+
+        print(f"POST request failed: {error}")
+
+        return None
+
+
+def update_post(post_id):
+
+    url = f"{BASE_URL}/posts/{post_id}"
+
+    data = {
+        "id": post_id,
+        "title": "Updated API Project",
+        "body": "This post was updated using Python.",
+        "userId": 1
+    }
+
+    try:
+
+        response = requests.put(
+            url,
+            json=data,
+            timeout=10
+        )
+
+        response.raise_for_status()
+
+        result = response.json()
+
+        logging.info(
+            f"PUT request successful for post {post_id}."
+        )
+
+        print("\nPUT Request")
+        print("-----------------------------")
+        print(f"Updated Post ID: {result['id']}")
+        print(f"New Title: {result['title']}")
+
+        return result
+
+    except requests.exceptions.RequestException as error:
+
+        logging.error(f"PUT request failed: {error}")
+
+        print(f"PUT request failed: {error}")
+
+        return None
+
+
+def delete_post(post_id):
+
+    url = f"{BASE_URL}/posts/{post_id}"
+
+    try:
+
+        response = requests.delete(
+            url,
+            timeout=10
+        )
+
+        response.raise_for_status()
+
+        logging.info(
+            f"DELETE request successful for post {post_id}."
+        )
+
+        print("\nDELETE Request")
+        print("-----------------------------")
+        print(f"Post {post_id} deleted successfully.")
+
+        return True
+
+    except requests.exceptions.RequestException as error:
+
+        logging.error(f"DELETE request failed: {error}")
+
+        print(f"DELETE request failed: {error}")
+
+        return False
+
+
+def main():
+
+    print("Python REST API Client")
+    print("======================")
+
+    # GET
+    users = get_users(limit=5)
+
+    if users:
+        display_users(users)
+
+    # POST
+    created_post = create_post()
+
+    # PUT
+    if created_post:
+        post_id = created_post["id"]
+        update_post(post_id)
+
+    # DELETE
+    if created_post:
+        delete_post(created_post["id"])
+
+
+if __name__ == "__main__":
+    main()

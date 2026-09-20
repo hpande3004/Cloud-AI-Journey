@@ -1,0 +1,4 @@
+2026-09-20 09:29:21,431 - INFO - GET request successful. Retrieved 5 users.
+2026-09-20 09:29:21,924 - INFO - POST request successful. Created post ID: 101
+2026-09-20 09:29:22,604 - ERROR - PUT request failed: 500 Server Error: Internal Server Error for url: https://jsonplaceholder.typicode.com/posts/101
+2026-09-20 09:29:23,099 - INFO - DELETE request successful for post 101.
