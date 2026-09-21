@@ -1,0 +1,296 @@
+import os
+import requests
+import logging
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+BASE_URL = "https://jsonplaceholder.typicode.com"
+API_KEY = os.getenv("API_KEY")
+
+logging.basicConfig(
+    filename="api_client.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+HEADERS = {
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {API_KEY}"
+}
+
+
+def handle_response(response):
+    """Handle common HTTP status codes."""
+
+    if response.status_code == 200:
+        print("Request successful.")
+        return True
+
+    elif response.status_code == 201:
+        print("Resource created successfully.")
+        return True
+
+    elif response.status_code == 204:
+        print("Request successful. No content returned.")
+        return True
+
+    elif response.status_code == 400:
+        print("Bad request.")
+
+    elif response.status_code == 401:
+        print("Unauthorized.")
+
+    elif response.status_code == 403:
+        print("Forbidden.")
+
+    elif response.status_code == 404:
+        print("Resource not found.")
+
+    elif response.status_code >= 500:
+        print("Server error.")
+
+    else:
+        print(f"Unexpected status code: {response.status_code}")
+
+    return False
+
+
+def get_users(limit=5):
+    url = f"{BASE_URL}/users"
+    params = {"_limit": limit}
+
+    try:
+        response = requests.get(
+            url,
+            params=params,
+            headers=HEADERS,
+            timeout=10
+        )
+
+        logging.info(
+            f"GET {response.url} → {response.status_code}"
+        )
+
+        if not handle_response(response):
+            return []
+
+        return response.json()
+
+    except requests.exceptions.Timeout:
+        print("Request timed out.")
+        logging.error("GET request timed out.")
+
+    except requests.exceptions.RequestException as error:
+        print(f"Request failed: {error}")
+        logging.error(f"GET request failed: {error}")
+
+    return []
+
+
+def get_user_by_id(user_id):
+    url = f"{BASE_URL}/users/{user_id}"
+
+    try:
+        response = requests.get(
+            url,
+            headers=HEADERS,
+            timeout=10
+        )
+
+        logging.info(
+            f"GET USER {user_id} → {response.status_code}"
+        )
+
+        if not handle_response(response):
+            return None
+
+        return response.json()
+
+    except requests.exceptions.RequestException as error:
+        print(f"Request failed: {error}")
+        logging.error(f"GET USER failed: {error}")
+
+    return None
+
+
+def create_post():
+    url = f"{BASE_URL}/posts"
+
+    data = {
+        "title": "Day 34 API Project",
+        "body": "Learning advanced REST API development with Python.",
+        "userId": 1
+    }
+
+    try:
+        response = requests.post(
+            url,
+            json=data,
+            headers=HEADERS,
+            timeout=10
+        )
+
+        logging.info(
+            f"POST {response.url} → {response.status_code}"
+        )
+
+        if not handle_response(response):
+            return None
+
+        return response.json()
+
+    except requests.exceptions.RequestException as error:
+        print(f"Request failed: {error}")
+        logging.error(f"POST request failed: {error}")
+
+    return None
+
+
+def update_post(post_id):
+    url = f"{BASE_URL}/posts/{post_id}"
+
+    data = {
+        "id": post_id,
+        "title": "Updated Day 34 Project",
+        "body": "This post was updated using Python.",
+        "userId": 1
+    }
+
+    try:
+        response = requests.put(
+            url,
+            json=data,
+            headers=HEADERS,
+            timeout=10
+        )
+
+        logging.info(
+            f"PUT {response.url} → {response.status_code}"
+        )
+
+        if not handle_response(response):
+            return None
+
+        return response.json()
+
+    except requests.exceptions.RequestException as error:
+        print(f"Request failed: {error}")
+        logging.error(f"PUT request failed: {error}")
+
+    return None
+
+
+def delete_post(post_id):
+    url = f"{BASE_URL}/posts/{post_id}"
+
+    try:
+        response = requests.delete(
+            url,
+            headers=HEADERS,
+            timeout=10
+        )
+
+        logging.info(
+            f"DELETE {response.url} → {response.status_code}"
+        )
+
+        return handle_response(response)
+
+    except requests.exceptions.RequestException as error:
+        print(f"Request failed: {error}")
+        logging.error(f"DELETE request failed: {error}")
+
+    return False
+
+
+def display_users(users):
+    print("\nUsers")
+    print("------------------------------")
+
+    for user in users:
+        print(
+            f"ID: {user['id']} | "
+            f"Name: {user['name']} | "
+            f"Email: {user['email']}"
+        )
+
+
+def main():
+
+    while True:
+
+        print("\n==============================")
+        print("       REST API CLIENT")
+        print("==============================")
+        print("1. Get Users")
+        print("2. Get User by ID")
+        print("3. Create Post")
+        print("4. Update Post")
+        print("5. Delete Post")
+        print("6. Exit")
+
+        choice = input("\nEnter your choice: ")
+
+        if choice == "1":
+
+            users = get_users(limit=3)
+
+            if users:
+                display_users(users)
+
+        elif choice == "2":
+
+            user_id = int(input("Enter User ID: "))
+
+            user = get_user_by_id(user_id)
+
+            if user:
+                print("\nUser Details")
+                print("------------------------------")
+                print(f"ID: {user['id']}")
+                print(f"Name: {user['name']}")
+                print(f"Email: {user['email']}")
+                print(f"City: {user['address']['city']}")
+
+        elif choice == "3":
+
+            post = create_post()
+
+            if post:
+                print("\nPost Created")
+                print("------------------------------")
+                print(f"Post ID: {post['id']}")
+                print(f"Title: {post['title']}")
+
+        elif choice == "4":
+
+            post_id = int(input("Enter Post ID: "))
+
+            post = update_post(post_id)
+
+            if post:
+                print("\nPost Updated")
+                print("------------------------------")
+                print(f"Post ID: {post['id']}")
+                print(f"Title: {post['title']}")
+
+        elif choice == "5":
+
+            post_id = int(input("Enter Post ID: "))
+
+            delete_post(post_id)
+
+        elif choice == "6":
+
+            print("Exiting API Client...")
+            break
+
+        else:
+
+            print("Invalid choice. Please try again.")
+
+
+if __name__ == "__main__":
+    main()
