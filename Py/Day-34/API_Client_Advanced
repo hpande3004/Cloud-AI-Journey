@@ -235,7 +235,7 @@ def main():
 
         if choice == "1":
 
-            users = get_users(limit=3)
+            users = get_users()
 
             if users:
                 display_users(users)

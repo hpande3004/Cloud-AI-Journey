@@ -1,0 +1,2 @@
+This is my Day 36 Python AWS S3 test file.
+I am learning cloud automation with Python and Boto3.

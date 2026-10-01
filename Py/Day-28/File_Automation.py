@@ -42,9 +42,3 @@
 
 # print("Temporary File Created")
 #-------------------------------------
-import os
-# os.remove("Temporary/test.txt")
-# print("File deleted")
-
-os.rmdir("Temporary")
-print("Folder Deleted")
