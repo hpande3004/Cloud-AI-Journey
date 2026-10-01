@@ -1,0 +1,1 @@
+Day 42 - Testing S3 event driven Lambda automation.
