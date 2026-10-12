@@ -1,0 +1,13 @@
+Cloud-AI-Journey - Day 48
+
+Testing AWS event-driven automation.
+
+Services:
+- Amazon S3
+- AWS Lambda
+- Amazon SNS
+- Amazon SQS
+
+Expected result:
+Uploading this file to S3 should automatically trigger
+Lambda and send notifications to Email and SQS.
