@@ -1,0 +1,6 @@
+let queues = Resources.*[ Type == 'AWS::SQS::Queue' ]
+
+rule practice_queue_requires_encryption {
+    %queues not empty
+    %queues.Properties.SqsManagedSseEnabled == true
+}
