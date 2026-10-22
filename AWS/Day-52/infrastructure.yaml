@@ -1,0 +1,43 @@
+
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Day 52 - Reusable S3 Infrastructure with CloudFormation
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - test
+      - prod
+    Description: Deployment environment
+
+Resources:
+  LearningBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      Tags:
+        - Key: Project
+          Value: Cloud-AI-Journey
+        - Key: Environment
+          Value: !Ref EnvironmentName
+      VersioningConfiguration:
+        Status: Suspended
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+Outputs:
+  BucketName:
+    Description: Name of the S3 bucket
+    Value: !Ref LearningBucket
+
+  BucketARN:
+    Description: ARN of the S3 bucket
+    Value: !GetAtt LearningBucket.Arn
+
+  DeploymentEnvironment:
+    Description: Selected environment
+    Value: !Ref EnvironmentName
