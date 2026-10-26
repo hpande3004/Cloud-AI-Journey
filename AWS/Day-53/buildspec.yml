@@ -1,0 +1,33 @@
+
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.13
+    commands:
+      - echo "Checking Python runtime..."
+      - python --version
+
+  pre_build:
+    commands:
+      - echo "Checking Python syntax..."
+      - python -m compileall -q AWS/Day-53/app.py AWS/Day-53/test_app.py
+
+  build:
+    commands:
+      - echo "Running Python application..."
+      - python AWS/Day-53/app.py
+      - echo "Executing automated unit tests..."
+      - python -m unittest discover -s AWS/Day-53 -p test_app.py -v
+
+  post_build:
+    commands:
+      - echo "Build commands completed."
+
+artifacts:
+  base-directory: AWS/Day-53
+  files:
+    - app.py
+    - test_app.py
+    - README.md
